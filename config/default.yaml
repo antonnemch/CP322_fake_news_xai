@@ -1,0 +1,11 @@
+# File: config/default.yaml
+#
+# Responsibilities:
+# - Central configuration for dataset choice, model params, training, and XAI settings.
+#
+# Contributors:
+# - <Name 1>
+# - <Name 2>
+# - <Name 3>
+
+# (Body of the YAML config goes here)

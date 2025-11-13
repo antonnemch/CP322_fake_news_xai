@@ -1,0 +1,18 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# data & artifacts
+data/*
+!data/.gitkeep
+artifacts/*
+!artifacts/.gitkeep
+
+# notebooks
+.ipynb_checkpoints/
+
+# hf caches
+.cache/
+huggingface/

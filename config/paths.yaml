@@ -1,0 +1,11 @@
+# File: config/paths.yaml
+#
+# Responsibilities:
+# - Optional machine-specific paths (e.g., Hugging Face cache directory).
+#
+# Contributors:
+# - <Name 1>
+# - <Name 2>
+# - <Name 3>
+
+# (Body of the YAML config goes here)
