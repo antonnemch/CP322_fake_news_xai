@@ -6,8 +6,16 @@
 # - Store explanations and XAI metrics under artifacts/explanations and artifacts/metrics.
 #
 # Contributors:
-# - <Name 1>
+# - Anton Nemchinski
 # - <Name 2>
 # - <Name 3>
 
-python -m src.explain.eval_xai --config config/default.yaml
+#!/usr/bin/env bash
+set -e
+
+# Example usage:
+#   ./scripts/run_xai.sh
+
+PYTHONPATH=. python -m src.explain.run_xai_batch --dataset kaggle --methods ig lime shap
+PYTHONPATH=. python -m src.explain.run_xai_batch --dataset liar   --methods ig lime shap
+

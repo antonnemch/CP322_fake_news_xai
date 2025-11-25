@@ -25,7 +25,7 @@ from tqdm import tqdm
 def make_shap_explainer(model, tokenizer, cfg):
     """
     Build a SHAP explainer using SHAP's transformer text masker, which
-    understands token boundaries and BERT tokenization
+    understands token boundaries and BERT tokenization.
 
     Args:
         model: HuggingFace transformer model
@@ -35,47 +35,54 @@ def make_shap_explainer(model, tokenizer, cfg):
     Returns:
         shap.Explainer instance
     """
-    shap_cfg = cfg.get("shap", {})  
+    shap_cfg = cfg.get("shap", {})
     device = next(model.parameters()).device
     model.eval()
-  
+
+    # Make sure we never exceed the model's max context size
+    model_max_len = getattr(model.config, "max_position_embeddings", 512)
+    # Prefer SHAP-specific max_seq_length, else fall back to data.max_length, else model limit
+    default_len = cfg.get("data", {}).get("max_length", model_max_len)
+    max_len = min(shap_cfg.get("max_seq_length", default_len), model_max_len)
+
     def predict(texts):
         """
         Prediction function for SHAP.
         Takes a list/array of text strings and returns class probabilities.
-        
+
         Args:
             texts: List or array of text strings
-        
+
         Returns:
             numpy array of shape (n_samples, n_classes)
         """
-        #Filter empty strings
+        # Filter empty strings
         texts = [t if len(t.strip()) > 0 else "[MASK]" for t in texts]
 
-        #Tokenize inputs
+        # Tokenize inputs *safely*
         inputs = tokenizer(
             texts,
-            return_tensors='pt',
+            return_tensors="pt",
             padding=True,
-            truncation=True,
-            max_length=shap_cfg.get("max_seq_length", 512)
-        ) 
-        #Move inputs to device
+            truncation=True,      # <- ensures we truncate
+            max_length=max_len,   # <- capped at model_max_len
+        )
+
+        # Move inputs to device
         inputs = {k: v.to(device) for k, v in inputs.items()}
 
-        #Get predictions
+        # Get predictions
         with torch.no_grad():
             logits = model(**inputs).logits
             probs = torch.softmax(logits, dim=-1).cpu().numpy()
-        
+
         return probs
-    
-    #Build SHAP explainer
+
+    # Build SHAP explainer
     explainer = shap.Explainer(
         model=predict,
-        masker=shap.maskers.Text(tokenizer),
-        output_names=cfg.get("class_names", ["fake", "real"])
+        masker=shap.maskers.Text(tokenizer), # type: ignore
+        output_names=cfg.get("class_names", ["fake", "real"]),
     )
 
     return explainer
@@ -85,7 +92,7 @@ def explain_sample_shap(
     explainer,
     cfg: Dict[str, Any],
     sample_id: Any = None,
-    true_label: int = None
+    true_label: int = None # type: ignore
 ):
     """
     Generate SHAP explanation for a single text sample

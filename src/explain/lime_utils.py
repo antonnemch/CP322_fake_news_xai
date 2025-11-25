@@ -50,7 +50,7 @@ def explain_sample_lime(
         tokenizer,
         explainer: LimeTextExplainer,
         cfg,
-        sample_id: int | str = None,
+        sample_id: int | str = None, # type: ignore
         true_label: int | None = None
 ):
   """
@@ -89,7 +89,7 @@ def explain_sample_lime(
           return_tensors='pt',
           padding=True,
           truncation=True,
-          max_length=lime_cfg.get("max_seq_length", 512)
+          max_length=lime_cfg.get("max_seq_length", cfg["data"]["max_length"])
       )
 
       #Move inputs to device
@@ -106,7 +106,7 @@ def explain_sample_lime(
       return_tensors='pt',
       padding=True,
       truncation=True,
-      max_length=lime_cfg.get("max_seq_length", 512)
+      max_length=lime_cfg.get("max_seq_length", cfg["data"]["max_length"])
   )
   inputs = {k: v.to(device) for k, v in inputs.items()}
   with torch.no_grad():
@@ -118,7 +118,7 @@ def explain_sample_lime(
       text_instance=text,
       classifier_fn=lime_predict,
       num_features=lime_cfg.get("num_features", 10),
-      num_samples=lime_cfg.get("num_samples", 5000),
+      num_samples=lime_cfg.get("num_samples", 500),
       labels=(pred_label,) 
   )
 
