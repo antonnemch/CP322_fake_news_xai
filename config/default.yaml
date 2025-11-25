@@ -13,7 +13,6 @@ seed: 42
 
 data:
   # Which dataset loader to use inside src/data.py
-  # For now we only implement "kaggle_fake_news", later we can add "liar", etc.
   dataset: "kaggle_fake_news"
 
   # Maximum number of BPE tokens per example that we feed into DistilBERT.
@@ -59,10 +58,71 @@ hardware:
   # debugging on any machine (good for teammates without a GPU).
   debug_mode: true
 
-xai:
-  # Number of samples from the test set to use when running explainability
-  # methods (LIME / SHAP / IG) so we don't blow up runtime.
-  sample_size: 50
+# ====================================================================
+# XAI CONFIGURATION
+# Controls hyperparameters for Integrated Gradients, LIME, and SHAP.
+# These values do NOT change the trained model, only how explanations
+# are generated and how many samples we explain.
+# ====================================================================
 
-  # Lists of "top-k" important tokens used in deletion tests, etc.
-  topk_list: [3, 5, 10]
+ig:
+  # Number of integration steps for Integrated Gradients.
+  # Higher → smoother / more accurate attributions, but slower.
+  # Typical range: 16–128. 32 is a reasonable default.
+  n_steps: 64
+
+  # Maximum sequence length (in tokens) used when tokenizing text
+  # for IG. Should usually match data.max_length, and must NOT
+  # exceed the model's max_position_embeddings (e.g., 512).
+  max_seq_length: 256
+
+  # How many examples from the dataset we generate IG explanations for.
+  # The runner will take min(num_explain_samples, dataset_size).
+  num_explain_samples: 100
+
+lime:
+  # If true, LIME uses a bag-of-words representation when building its
+  # local surrogate model. This is standard for text LIME.
+  bow: true
+
+  # Regex used by LIME to split text into tokens/words.
+  # "\\W+"  == split on one or more non-word characters.
+  # (Double-escaped here because YAML → Python string → regex.)
+  split_expression: "\\W+"
+
+  # Maximum sequence length for tokenization inside LIME.
+  # Keep consistent with data.max_length and the model limit.
+  max_seq_length: 256
+
+  # Number of top tokens (features) to keep in each LIME explanation.
+  # This is how many words will appear with importance scores.
+  num_features: 15
+
+  # Number of LIME perturbation samples per example.
+  # Higher → more stable / accurate local surrogate, but slower.
+  # Common range: 500–5000. 500 is a decent tradeoff.
+  num_samples: 1000
+
+  # How many dataset examples we generate LIME explanations for.
+  # Again, the runner clips to the dataset size.
+  num_explain_samples: 100
+
+shap:
+  # Maximum sequence length used when SHAP tokenizes text via the
+  # wrapped tokenizer. The code will also cap this at the model’s
+  # max_position_embeddings (e.g., 512), so it’s safe.
+  max_seq_length: 256
+
+  # Budget for SHAP’s internal optimization (e.g., Kernel/Partition
+  # explainer). Higher max_evals → better approximation but slower.
+  # 5000 is moderate; can be lowered/raised if needed.
+  max_evals: 5000
+
+  # How many dataset examples we generate SHAP explanations for.
+  # SHAP is slow, so this is often smaller than LIME/IG in practice.
+  num_explain_samples: 100
+
+# Human-readable class names for the classifier outputs.
+# These are used by SHAP (and can also be used in plots / reports).
+# Index 0 → "fake", index 1 → "real" (must match the model’s label order).
+class_names: ["fake", "real"]
