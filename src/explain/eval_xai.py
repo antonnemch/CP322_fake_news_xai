@@ -370,7 +370,7 @@ def evaluate_faithfulness_for_file(
                 print(f"  rec keys: {list(rec.keys())}")
                 print(f"  len(tokens)={len(rec.get('tokens', []))}, "
                       f"len(importances)={len(rec.get('importances', []))}")
-                traceback.print_exc()
+                traceback.print_exc() # type: ignore
             drop = None  # ensure we skip below
 
         # Skip invalid drops; log why for SHAP
