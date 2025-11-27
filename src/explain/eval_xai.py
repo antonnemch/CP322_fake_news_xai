@@ -160,9 +160,10 @@ def summarize_xai_metrics(all_metrics: dict, out_path: str) -> None:
         json.dump(all_metrics, f, indent=2)
     print(f"Saved XAI metrics to {out_path}")
 
+
 if __name__ == "__main__":
 
-    from src.models import get_tokenizer, get_distilbert_model  # adjust if names differ
+    from src.models import get_tokenizer, get_distilbert_model  # adjust if needed
 
     tokenizer = get_tokenizer()
     model = get_distilbert_model()
@@ -170,8 +171,57 @@ if __name__ == "__main__":
     model.to(device)
     model.eval()
 
-    path = "artifacts/explanations/kaggle_shap.jsonl"
-    exs = load_jsonl(path)
+    datasets = ["kaggle", "liar"]
+    methods = ["lime", "shap", "ig"]
 
-    faith = compute_faithfulness(exs, model, tokenizer, cfg={"top_k": 3, "max_examples": 100})
-    print(f"Faithfulness for {path}: {faith}")
+    all_metrics = {}
+
+    # Faithfulness: basic deletion test
+    for ds in datasets:
+        for m in methods:
+            key = f"{ds}_{m}"
+            path = Path(f"artifacts/explanations/{key}.jsonl")
+            if not path.exists():
+                print(f"[faithfulness] Skipping {key} (no {path})")
+                continue
+
+            exs = load_jsonl(str(path))
+            faith = compute_faithfulness(
+                exs,
+                model,
+                tokenizer,
+                cfg={"top_k": 3, "max_examples": 100, "label_idx": 1},
+            )
+            all_metrics.setdefault(key, {})["faithfulness"] = faith
+            print(f"[faithfulness] {key}: {faith}")
+
+    # Stability: compare original vs. perturbed explanations if available
+    for ds in datasets:
+        for m in methods:
+            key = f"{ds}_{m}"
+            orig_path = Path(f"artifacts/explanations/{key}.jsonl")
+            pert_path = Path(f"artifacts/explanations/{key}_perturbed.jsonl")
+
+            if not (orig_path.exists() and pert_path.exists()):
+                print(f"[stability] Skipping {key} (need {orig_path} AND {pert_path})")
+                continue
+
+            ex_orig = load_jsonl(str(orig_path))
+            ex_pert = load_jsonl(str(pert_path))
+
+            stab = compute_stability(ex_orig, ex_pert, cfg={"max_pairs": 200})
+            all_metrics.setdefault(key, {})["stability"] = stab
+            print(f"[stability] {key}: {stab}")
+
+    # Plausibility: average human ratings per method
+    ratings_path = Path("artifacts/explanations/human_ratings.jsonl")
+    if ratings_path.exists():
+        human_labels = load_jsonl(str(ratings_path))
+        plaus = compute_plausibility([], human_labels)
+        all_metrics["plausibility"] = plaus
+        print(f"[plausibility] {plaus}")
+    else:
+        print("[plausibility] No human_ratings.jsonl found, skipping plausibility.")
+
+    summarize_xai_metrics(all_metrics, "artifacts/metrics/xai_metrics.json")
+
