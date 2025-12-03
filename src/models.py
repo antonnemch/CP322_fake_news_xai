@@ -17,7 +17,6 @@ Key functions to implement:
 """
 
 import pandas as pd
-import numpy as np
 from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression

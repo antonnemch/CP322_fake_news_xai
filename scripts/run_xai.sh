@@ -7,8 +7,6 @@
 #
 # Contributors:
 # - Anton Nemchinski
-# - <Name 2>
-# - <Name 3>
 
 #!/usr/bin/env bash
 set -e

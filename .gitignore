@@ -7,13 +7,31 @@ __pycache__/
 # data & artifacts
 data/*
 !data/.gitkeep
+
 artifacts/*
 !artifacts/.gitkeep
-!artifacts/metrics
 
-!artifacts/explanations
-!artifacts/layers
-!artifacts/metrics
+# keep metrics & XAI outputs
+!artifacts/metrics/**
+!artifacts/explanations/**
+!artifacts/layers/**
+
+# keep DistilBERT final checkpoints
+!artifacts/distilbert/
+!artifacts/distilbert/kaggle/
+!artifacts/distilbert/kaggle/final_model/
+!artifacts/distilbert/kaggle/final_model/**
+
+!artifacts/distilbert/liar/
+!artifacts/distilbert/liar/final_model/
+!artifacts/distilbert/liar/final_model/**
+
+artifacts/distilbert/kaggle/checkpoint-2000
+artifacts/distilbert/kaggle/checkpoint-5000
+artifacts/distilbert/kaggle/checkpoint-5124
+artifacts/distilbert/liar/checkpoint-400
+artifacts/distilbert/liar/checkpoint-1200
+artifacts/distilbert/liar/checkpoint-1390
 
 # notebooks
 .ipynb_checkpoints/

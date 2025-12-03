@@ -10,10 +10,6 @@ Contributors:
 - Anton Nemchinski
 - Zaid (Person 2 - DistilBERT Training & Tuning)
 
-Key functions to implement:
-- main() -> None
-- setup_training(cfg) -> (model, tokenizer, train_dataset, val_dataset, training_args)
-- run_training(model, tokenizer, train_dataset, val_dataset, training_args, cfg) -> None
 """
 
 import argparse
@@ -22,7 +18,7 @@ import numpy as np
 from pathlib import Path
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-from src.utils import load_config, set_seed, get_device, get_run_id, ensure_dir
+from src.utils import load_config, set_seed, get_device
 from src.models import get_tokenizer, get_distilbert_model
 from src.data import load_processed_dataset
 
