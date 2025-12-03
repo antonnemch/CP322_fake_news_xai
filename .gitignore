@@ -7,6 +7,12 @@ __pycache__/
 # data & artifacts
 data/*
 !data/.gitkeep
+!data/processed/
+data/processed/kaggle_train.csv
+data/processed/kaggle_val.csv
+data/processed/liar_train.csv
+data/processed/liar_val.csv
+data/processed/liar_test.csv
 
 artifacts/*
 !artifacts/.gitkeep
@@ -32,6 +38,9 @@ artifacts/distilbert/kaggle/checkpoint-5124
 artifacts/distilbert/liar/checkpoint-400
 artifacts/distilbert/liar/checkpoint-1200
 artifacts/distilbert/liar/checkpoint-1390
+
+artifacts/distilbert/kaggle/final_model/model.safetensors
+artifacts/distilbert/liar/final_model/model.safetensors
 
 # notebooks
 .ipynb_checkpoints/
