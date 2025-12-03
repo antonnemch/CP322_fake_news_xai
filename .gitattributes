@@ -1,0 +1,2 @@
+artifacts/distilbert/kaggle/final_model/model.safetensors filter=lfs diff=lfs merge=lfs -text
+artifacts/distilbert/liar/final_model/model.safetensors filter=lfs diff=lfs merge=lfs -text
