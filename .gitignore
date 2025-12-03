@@ -12,7 +12,6 @@ data/processed/kaggle_train.csv
 data/processed/kaggle_val.csv
 data/processed/liar_train.csv
 data/processed/liar_val.csv
-data/processed/liar_test.csv
 
 artifacts/*
 !artifacts/.gitkeep
