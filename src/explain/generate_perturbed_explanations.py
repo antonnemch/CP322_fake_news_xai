@@ -4,6 +4,9 @@ File: src/explain/generate_perturbed_explanations.py
 
 Generate "perturbed" explanation files to support stability evaluation.
 
+Contributors:
+- Anton Nemchinski
+
 For each dataset/method, this script:
   - Loads the fine-tuned DistilBERT classifier.
   - Reads original explanations from:
@@ -28,7 +31,6 @@ import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-from captum.attr import IntegratedGradients
 from lime.lime_text import LimeTextExplainer
 import shap
 

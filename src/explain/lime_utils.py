@@ -8,8 +8,7 @@ Responsibilities:
 
 Contributors:
 - Ryan Wilson
-- <Name 2>
-- <Name 3>
+- Anton Nemchinski
 
 Key functions to implement:
 - make_lime_explainer(cfg, class_names: list[str]) -> LimeTextExplainer

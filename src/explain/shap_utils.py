@@ -8,8 +8,7 @@ Responsibilities:
 
 Contributors:
 - Ryan Wilson
-- <Name 2>
-- <Name 3>
+- Anton Nemchinski
 
 Key functions to implement:
 - make_shap_explainer(model, tokenizer, cfg)

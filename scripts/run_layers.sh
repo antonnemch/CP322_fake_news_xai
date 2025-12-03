@@ -7,9 +7,7 @@
 # - Save results to artifacts/probes and artifacts/figures.
 #
 # Contributors:
-# - <Name 1>
-# - <Name 2>
-# - <Name 3>
+# - Anton Nemchinski
 
 python -m src.layers.probe --config config/default.yaml
 python -m src.layers.attention_viz --config config/default.yaml

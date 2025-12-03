@@ -2,6 +2,9 @@
 """
 File: src/explain/eval_xai.py
 
+Contributors:
+- Anton Nemchinski
+
 Evaluate explanation methods (IG, LIME, SHAP) along three axes:
 
 - Faithfulness: how much the model's confidence drops when we delete
@@ -42,7 +45,7 @@ Usage:
 import argparse
 import json
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 import torch
