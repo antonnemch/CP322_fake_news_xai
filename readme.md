@@ -1,9 +1,8 @@
 # CP322 – Fake News Detection with DistilBERT & XAI
 
-This project trains and analyzes a DistilBERT-based fake-news detector on two datasets:
-Kaggle (long news articles) and LIAR (short political claims).  
-Beyond accuracy, we evaluate how explainable the model is using Integrated Gradients (IG),
-LIME, SHAP, attention visualizations, and layer-wise probing.
+This project trains and analyzes a DistilBERT-based fake-news detector on two very different datasets: the Kaggle Fake News dataset (long, full-text news articles) and the LIAR dataset (short, headline-style political claims). We first establish TF-IDF baselines (LogReg, SVM, RF), then fine-tune DistilBERT separately on each dataset and compare performance, showing that the transformer architecture is especially strong on long-form news.
+
+Beyond raw accuracy, the focus is on explainability. We compute token-level attributions with Integrated Gradients (IG), LIME, and SHAP, and analyze model attention maps and layer-wise probing to see where in the network fake vs. real signals emerge. Finally, we quantify explanation quality with faithfulness (probability drop when important tokens are removed) and stability (how consistent explanations are under small input perturbations), to evaluate not just how well the model predicts fake news, but how trustworthy and robust its explanations are across the two datasets.
 
 ---
 
@@ -22,9 +21,9 @@ LIME, SHAP, attention visualizations, and layer-wise probing.
 
 3. **Install minimal dependencies**
 
-    pip install -r requirements.txt
+    pip install -r requirements_minimal.txt
 
-4. **Open the main notebook**
+4. **Open the main notebook (and select appropriate kernel)**
 
    - Launch Jupyter / VS Code and open `project_overview.ipynb`.
    - Run the cells from top to bottom.
